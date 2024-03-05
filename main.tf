@@ -22,6 +22,10 @@ resource "aws_instance" "blog" {
   ami                    = data.aws_ami.app_ami.id
   instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.blog.id]
+  metadata_options {
+    http_tokens = "required"
+    instance_metadata_tags = "enabled"
+  }
 
   tags = {
     Name = "Learning Terraform"
