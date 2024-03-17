@@ -30,19 +30,32 @@ module "blog_vpc" {
   }
 }
 
+resource "aws_launch_template" "blog_launch_template" {
+  name = "blog"
+
+  image_id = data.aws_ami.app_ami.id
+  instance_type = var.instance_type
+  security_group_names = [module.blog_sg.security_group_name]
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+    instance_metadata_tags      = "enabled"
+  }
+}
+
 module "blog_autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "7.4.1"
 
   name = "blog"
 
-  min_size            = 1
-  max_size            = 2
-  vpc_zone_identifier = module.blog_vpc.public_subnets
-  target_group_arns   = module.blog_alb.target_group_arns
-  security_groups     = [module.blog_sg.security_group_id]
-  instance_type       = var.instance_type
-  image_id            = data.aws_ami.app_ami.id
+  min_size             = 1
+  max_size             = 2
+  vpc_zone_identifier  = module.blog_vpc.public_subnets
+  target_group_arns    = module.blog_alb.target_group_arns
+  launch_template_name = "blog"
 }
 
 module "blog_alb" {
