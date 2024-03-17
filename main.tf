@@ -31,7 +31,7 @@ module "blog_vpc" {
 }
 
 resource "aws_launch_template" "blog_launch_template" {
-  name = "blog"
+  name = "blog-launch-template"
 
   metadata_options {
     http_endpoint               = "enabled"
