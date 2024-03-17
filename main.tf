@@ -34,7 +34,6 @@ resource "aws_launch_template" "blog_launch_template" {
   name = "blog"
 
   image_id = data.aws_ami.app_ami.id
-  instance_type = var.instance_type
   security_group_names = [module.blog_sg.security_group_name]
 
   metadata_options {
@@ -56,6 +55,7 @@ module "blog_autoscaling" {
   vpc_zone_identifier  = module.blog_vpc.public_subnets
   target_group_arns    = module.blog_alb.target_group_arns
   launch_template_name = "blog"
+  instance_type        = var.instance_type
 }
 
 module "blog_alb" {
