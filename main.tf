@@ -54,7 +54,7 @@ module "blog_autoscaling" {
   security_groups      = [module.blog_sg.security_group_id]
   instance_type        = var.instance_type
   image_id             = data.aws_ami.app_ami.id
-  launch_template_name = "blog"
+  launch_template_id   = aws_launch_template.blog_launch_template.id
 }
 
 module "blog_alb" {
