@@ -30,17 +30,6 @@ module "blog_vpc" {
   }
 }
 
-resource "aws_launch_template" "blog_launch_template" {
-  name = "blog-launch-template"
-
-  metadata_options {
-    http_endpoint               = "enabled"
-    http_tokens                 = "required"
-    http_put_response_hop_limit = 1
-    instance_metadata_tags      = "enabled"
-  }
-}
-
 module "blog_autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
   version = "7.4.1"
@@ -54,7 +43,6 @@ module "blog_autoscaling" {
   security_groups      = [module.blog_sg.security_group_id]
   instance_type        = var.instance_type
   image_id             = data.aws_ami.app_ami.id
-  launch_template_id   = aws_launch_template.blog_launch_template.id
 }
 
 module "blog_alb" {
